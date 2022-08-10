@@ -28,6 +28,9 @@ class AdvertisementSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """Метод для создания"""
+        
+        if Advertisement.objects.filter(creator=self.context["request"].user).filter(status='OPEN').count() > 10:
+            raise serializers.ValidationError('У вас больше 10 открытых объявлений')
 
         # Простановка значения поля создатель по-умолчанию.
         # Текущий пользователь является создателем объявления
@@ -41,9 +44,7 @@ class AdvertisementSerializer(serializers.ModelSerializer):
     def validate(self, data):
         """Метод для валидации. Вызывается при создании и обновлении."""
 
-        if Advertisement.objects.filter(creator=self.context["request"].user).filter(status='OPEN').count() > 10:
-            raise serializers.ValidationError('У вас больше 10 открытых объявлений')
-
+      
         # TODO: добавьте требуемую валидацию
 
         return data
