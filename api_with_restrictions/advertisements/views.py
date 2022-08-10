@@ -26,10 +26,10 @@ class AdvertisementViewSet(ModelViewSet):
         serializer.save(creator=self.request.user)
 
 
-    def get_permissions(self):
+        def get_permissions(self):
         """Получение прав для действий."""
-        if self.action in ["create", "update", "partial_update"]:
+        if self.action == "create":
             return [IsAuthenticatedOrReadOnly()]
-        if self.action == "destroy" or "update":
+        if self.action == "destroy" or "update" or "partial_update":
             return [IsOwnerOrReadOnly()]
         return []
